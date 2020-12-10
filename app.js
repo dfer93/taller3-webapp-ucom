@@ -3,14 +3,15 @@
 var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 3005;
-
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 
 const expressSwagger = require('express-swagger-generator')(app);
-
-var mascotasRoutes = require('./routes/mascota');
+const mascotasRoutes = require('./routes/mascota');
+const categoriasRoutes = require('./routes/categoria');
+const clientesRoutes = require('./routes/cliente');
+const serviciosRoutes = require('./routes/tservicio');
 
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -33,7 +34,6 @@ var corsOptions = {
 }
 
 app.options('*', cors()) 
-
 app.use(cors())
 
 
@@ -68,8 +68,24 @@ expressSwagger(optionsExpressSwagger)
 
 
 // routes ======================================================================
-app.use('/mascota', mascotasRoutes);
-
+app.use(express.static(__dirname + '/public'));
+//masctoas
+app.use('/mascotaslist', express.static(__dirname + '/public/mascota/mascotaslist.html'));
+app.use('/mascotaedit', express.static(__dirname + '/public/mascota/mascotasedit.html'));
+app.use('/mascotaview', express.static(__dirname + '/public/mascota/mascotasview.html'));
+app.use('/mascotas', mascotasRoutes);
+//categorias
+app.use('/categorialist', express.static(__dirname + '/public/categoria/categorialist.html'));
+app.use('/categoriaedit', express.static(__dirname + '/public/categoria/categoriaedit.html'));
+app.use('/categoriaview', express.static(__dirname + '/public/categoria/categoriaview.html'));
+app.use('/categorias', categoriasRoutes);
+//categorias
+app.use('/clientelist', express.static(__dirname + '/public/cliente/clientelist.html'));
+app.use('/clienteedit', express.static(__dirname + '/public/cliente/clienteedit.html'));
+app.use('/clienteview', express.static(__dirname + '/public/cliente/clienteview.html'));
+app.use('/clientes', clientesRoutes);
+//SERVICIOS
+app.use('/tservicios', serviciosRoutes);
 // launch ======================================================================
 
 app.listen(port);

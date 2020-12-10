@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetShop | Mascotas</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg" style="width: 30px;line-height: 41px" alt="">
+                Veterinaria
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./mascotaslist">Mascotas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./clientelist">Clientes</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./categorialist">Categorías</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container content mt-3">
+
+
+
+        <div class="container mt-3">
+            <table class="table text-center" style="text-transform:uppercase">
+                <thead>
+                    <tr>
+                        <th scope="col">Id Cliente</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Direccion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        const getCliente = async () => {
+            const resultado = await axios.get(`/clientes/list/`);
+          
+            resultado.data.forEach(cliente =>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cliente.id_cliente}</td>
+                    <td >${cliente.nombre}</td>
+                    <td >${cliente.apellido}</td>
+                    <td >${cliente.direccion}</td>
+                    <td>
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a href="./categoriaview?id=${cliente.id}" class="btn btn-outline-success"><i class="fa fa-paw"></i></a>
+                        <a href="./categoriaview?id=${cliente.id}" class="btn btn-outline-primary"><i class="fa fa-search"></i></a>
+                        <a href="./categoriaedit?id=${cliente.id}" class="btn btn-outline-info"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-outline-danger"><i class="fa fa-trash"></i></a>
+                    </div>
+                    </td>
+                `;
+                document.querySelector('tbody').appendChild(tr);
+            })
+            
+        }
+
+            getCliente();
+            //const categorias = await axios.get('http://localhost:3005/categorias/list');
+    </script>
+  </body>
+</html>

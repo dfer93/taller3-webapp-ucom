@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetShop | Mascotas</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg" style="width: 30px;line-height: 41px" alt="">
+                Veterinaria
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./mascotaslist">Mascotas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./clientelist">Clientes</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./categorialist">Categorías</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container content mt-3">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">    
+                    <div class="card-body">
+                        <h5 class="card-title" id="nombre"></h5>
+                        <p class="card-text" id="categoria"></p>
+                        <a href="#" class="btn btn-primary">Pagar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const valores = window.location.search;
+        let parametro = valores.replace('?', '');
+        parametro = parametro.split('=');
+        const id = parametro[1];
+        console.log(id)
+        const viewCliente = async id => {
+
+            const getCliente = await axios.get(`/clientes/list/${id}`);
+            console.log(getCliente)
+            const nombre = getCliente.data[0].nombre;
+            const categoria = getCliente.data[0].categoria;
+            document.querySelector('#nombre').textContent = nombre;
+            document.querySelector('#categoria').textContent = categoria;
+
+            
+        }
+
+        viewCliente(id);
+
+    </script>
+  </body>
+</html>

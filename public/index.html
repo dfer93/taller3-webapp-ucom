@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetShop | Mascotas</title>
+    <link rel="icon" href="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="https://www.flaticon.com/svg/static/icons/svg/2421/2421861.svg" style="width: 30px;line-height: 41px" alt="">
+                Veterinaria
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./mascotaslist">Mascotas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./clienteslist">Clientes</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="./categorialist">Categorías</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container content mt-3">
+        <div class="container mt-3">
+            <div class="row" id="loading">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <label for="clientes">Cliente</label>
+                    <select id="clientes" class="form-select">
+                        <option value>Elige un cliente</option>
+                    </select>
+                    <br>
+                    <label for="servicio">Elija un servicio</label>
+                    <select id="servicio" class="form-select">
+                        <option>Elige un servicio</option>
+                    </select>
+                    <hr>
+                    <button class="btn btn-primary" id="verServicios">Ver Servicios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container content mt-3">
+        <table class="table text-center" id="noexiste1" style="display: none;">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="alert alert-danger" id="noexiste2" style="display: none;">
+            No existe ningun servicio para ese cliente
+        </div>
+    </div>
+
+
+
+    <script>
+        const cargarFormulario = async ()=>{
+            const clientes  = await axios.get('/clientes/list/');
+            const servicios = await axios.get('/tservicios/list/');
+
+            clientes.data.forEach(cliente => {
+                let option = document.createElement('option');
+                option.value = cliente.id_cliente;
+                option.textContent = cliente.nombre + " " + cliente.apellido;
+                document.querySelector('#clientes').appendChild(option)
+            });
+
+            servicios.data.forEach(servicio =>{
+                let option = document.createElement('option');
+                option.value = servicio.id_tipo_servicio;
+                option.textContent = servicio.nombre_servicio;
+                document.querySelector('#servicio').appendChild(option)
+            })
+
+        }
+        cargarFormulario();
+
+        const btnServicios = document.querySelector('#verServicios');
+        btnServicios.addEventListener('click', async ()=>{
+            console.log('click')
+            let cliente = document.querySelector('#clientes').value;
+            let servicio = document.querySelector('#servicio').value;
+
+            const clientes  = await axios.get(`/clientes/list/${cliente}`);
+            console.log(clientes.data)
+            if(clientes.data.length > 0){
+                const tservicio = await axios.get(`/tservicios/tservis/${cliente}/${servicio}`);
+                if(tservicio.data.length > 0){
+                    document.querySelector('#noexiste1').style.display = '';
+                    tservicio.data.some(tservis=>{
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${tservis.id_cliente}</td>
+                            <td>${tservis.nombre} ${tservis.apellido}</td>
+                            <td>${tservis.fecha_servicio}</td>
+                            <td>${tservis.estado}</td>
+                        `;
+                        document.querySelector('tbody').appendChild(tr)
+                    })
+                    
+
+                }else{
+                    document.querySelector('#noexiste2').style.display = 'block';
+                }
+            }else{
+                document.querySelector('#noexiste2').style.display = 'block';
+            }
+            
+        })
+    </script>
+  </body>
+</html>

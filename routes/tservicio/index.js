@@ -22,53 +22,33 @@ const {
  * OBTENER TODAS LAS MASCOTAS
  *****************************/
 router.get('/list/', cors(), async (req, res, next) => {
-  console.log("OBTENER TODAS LAS MASCOTAS");
-  let mascotas = await db.getAllPet();
-  console.log("mascotas", mascotas[0]);
+  console.log("OBTENER TODAS TIPO SERVICIO");
+  let mascotas = await db.servicios();
+  console.log("CATEGORIAS", mascotas[0]);
   res.send(mascotas.rows);
 });
 
 /********************************
  * OBTENER MASCOTA POR ID
  *****************************/
+/*
 router.get('/list/:id', cors(), async (req, res, next) => {
-  console.log("obtener mascota por ID ", req.params.id);
-  let mascota = await db.obtenerMascotaPorID(req.params.id);
+  console.log("obtener SERVICIO por ID ", req.params.id);
+  let mascota = await db.categoriaId(req.params.id);
   console.log("mascotas", mascota);
   res.send(mascota.rows);
 });
-
+*/
 /********************************
- * ACTUALIZAR MASCOTA POR ID
+ * OBTENER MASCOTA POR ID
  *****************************/
-router.get('/update/:id', cors(), async (req, res, next) => {
-  let mascota = await db.updateMascota(req.params);
-  console.log("mascotas", mascota);
-  res.send(mascota.rows);
-});
-
-
-/********************************
- * INSERTAR MASCOTA
- *****************************/
-router.post('/insertar',cors(),async(req,res,next)=>{
-  console.log("insertar mascota")
-  var result={};
-  console.log("params", req.body);
-
-  var mascota=req.body;
-  result= await db.insertarMascota(mascota);
-
-  if(result.rows){
-      res.send(result.rows[0]);
-  }else{
-      res.send("No se pudo insertar");
-  }
-
-});
-
-
-
+router.get('/tservis/:cliente/:servicio', cors(), async (req, res, next) => {
+    console.log("obtener SERVICIO por ID ", req.params);
+    let parametros = req.params;
+    let mascota = await db.tservicio(parametros);
+    console.log("mascotas", mascota);
+    res.send(mascota.rows);
+  });
 
 
 
